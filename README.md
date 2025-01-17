@@ -1425,3 +1425,7 @@ No texture should have a dimension that exceeds 8192 in size, unless you have a 
 Every texture has a Texture Group property used for LODing, and this should be set correctly based on its use. For example, all UI textures should belong in the UI texture group.
 
 **[⬆ Back to Top](#table-of-contents)**
+
+Copyright (c) 2025 Martin Pažout
+
+See [LICENSE](/LICENSE)
