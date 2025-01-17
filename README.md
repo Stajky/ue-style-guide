@@ -1,39 +1,15 @@
-# [Gamemakin](https://gamemak.in) UE4 Style Guide() {
+# UE4 Style Guide() 
 
-*A mostly reasonable approach to Unreal Engine 4*
+This repo is for how to manage unreal project assets, handle naming and overall guidelines.
 
-Heavily inspired by the [Airbnb Javascript Style Guide](https://github.com/airbnb/javascript).
+The goal here is to create a sustainable project structure that will be easily maintained and the work of multiple developer possible.
 
-[![Analytics](https://ga-beacon.appspot.com/UA-80567399-1/repo?useReferrer)](#)
+Heavily inspired by https://github.com/Allar/ue5-style-guide
 
-## Repo Notice
-
-This repo is now located at https://github.com/Allar/ue5-style-guide. The default branch of this repository has been renamed `main`.
-
-## This is currently for UE4. For UE5/v2, see the v2 branch
 ## Linter and Style Guide Documentation
 
-More technical documentation regarding Linter and the Style Guide can be found at our [ReadTheDocs](https://ue4-style-guide.readthedocs.io/en/latest/) page.
+The original repository provides a Linter plugin I don't deem it necessary to use this Linter for anyone interested its here [Linter](https://ue4-style-guide.readthedocs.io/en/latest/) page.
 
-## Discuss This Style Guide
-
-Gamemakin LLC has a public Discord channel at http://discord.gamemak.in with a #linter channel if you'd like to discuss all things style guide and Linter plugin.
-
-## Linking To This Document
-
-Every section of this style guide is numbered for both easy reference and easy linking. You can link to any section directly by simply append a hash tag and the section number to the end of http://ue4.style
-For example, if you want to send someone to the first principle of this style guide you would append `#0.1`, resulting in http://ue4.style#0.1.
-
-## Forks And Translations
-
-If you have made a notable fork or translation that is not suitable for a pull request into this repo, please submit a pull request to add the fork or translation here.
-
-* [Korean Translation](https://github.com/ymkim50/ue4-style-guide/blob/master/README_Kor.md) by ymkim50
-* [Russian Translation](https://github.com/CosmoMyzrailGorynych/ue4-style-guide-rus/blob/master/README.md) by CosmoMyzrailGorynych
-* [Japanese Translation](https://github.com/akenatsu/ue4-style-guide/blob/master/README.jp.md) by akenatsu
-* [Chinese Translation](https://github.com/skylens-inc/ue4-style-guide/blob/master/README.md) by Beijing Skylens Tech.
-* [Brazilian Portuguese Translation](https://github.com/danlvr/ue5-style-guide/blob/main/README_PTBR.md) by danlvr.
-* [French Translation](https://github.com/Arnaud58/ue5-style-guide/blob/main/README.md) by Arnaud58
 
 ## Table of contents
 - [Important Terminology](#important-terminology)
@@ -204,8 +180,6 @@ When in the context of a class, it is often used to convey discussion about its 
 <a name="0"></a>
 ## 0. Principles
 
-These principles have been adapted from [idomatic.js style guide](https://github.com/rwaldron/idiomatic.js/).
-
 <a name="0.1"></a>
 ### 0.1 If your UE4 project already has a style guide, you should follow it
 
@@ -299,6 +273,8 @@ For unique and specific variations of assets, `Variant` is either a short and ea
 For unique but generic variations of assets, `Variant` is a two digit number starting at `01`. For example, if you have an environment artist generating nondescript rocks, they would be named `Rock_01`, `Rock_02`, `Rock_03`, etc. Except for rare exceptions, you should never require a three digit variant number. If you have more than 100 assets, you should consider organizing them with different base names or using multiple variant names.
 
 Depending on how your asset variants are made, you can chain together variant names. For example, if you are creating flooring assets for an Arch Viz project you should use the base name `Flooring` with chained variants such as `Flooring_Marble_01`, `Flooring_Maple_01`, `Flooring_Tile_Squares_01`.
+
+For naming conventions specific to BP look at [Blueprint Naming](#3-blueprints) 
 
 <a name="1.1-examples"></a>
 #### 1.1 Examples
@@ -959,7 +935,10 @@ Do not arbitrarily mark variables as `Editable`.
 <a name="bp-vars-editable-tooltips"></a>
 ##### 3.2.2.1 Tooltips
 
-All `Editable` variables, including those marked editable just so they can be marked as `Expose On Spawn`, should have a description in their `Tooltip` fields that explains how changing this value affects the behavior of the blueprint.
+~~All `Editable` variables, including those marked editable just so they can be marked as `Expose On Spawn`, should have a description in their `Tooltip` fields that explains how changing this value affects the behavior of the blueprint.~~
+Tooltips while useful are in my opinion overkill I wouldn't use them to describe what a variable is for as it can change quite frequently
+
+
 
 <a name="3.2.2.2"></a>
 <a name="bp-vars-editable-ranges"></a>
@@ -982,6 +961,8 @@ If a class has only a small number of variables, categories are not required.
 If a class has a moderate amount of variables (5-10), all `Editable` variables should have a non-default category assigned. A common category is `Config`.
 
 If a class has a large amount of variables, all `Editable` variables should be categorized into sub-categories using the category `Config` as the base category. Non-editable variables should be categorized into descriptive categories describing their usage.
+
+In widget blueprints place all the used widgets that make the widget into "Widget" category by default. 
 
 > You can define sub-categories by using the pipe character `|`, i.e. `Config | Animations`.
 
@@ -1127,6 +1108,8 @@ Any function that handles an event or dispatches an event should start with `On`
 
 `Handle` is not allowed. It is 'Unreal' to use `On` instead of `Handle`, while other frameworks may prefer to use `Handle` instead of `On`.
 
+Good use `Handle` when using the Gameplay Message Subsystem event system, thanks to this you will differentiate between Event Handlers and Dispatchers 
+
 Good examples:
 
 * `OnDeath` - Common collocation in games
@@ -1148,15 +1131,16 @@ Bad examples:
 <a name="bp-funcs-naming-rpcs"></a>
 #### 3.3.1.5 Remote Procedure Calls Should Be Prefixed With Target
 
-Any time an RPC is created, it should be prefixed with either `Server`, `Client`, or `Multicast`. No exceptions.
+~~Any time an RPC is created, it should be prefixed with either `Server`, `Client`, or `Multicast`. No exceptions.~~
+For blueprint even names I prefer using shorter versions `S_` for `Server`, `O` for client (since its replicating to owning client not just any client) and `M_` for Multicast 
 
 After the prefix, follow all other rules regarding function naming.
 
 Good examples:
 
-* `ServerFireWeapon`
-* `ClientNotifyDeath`
-* `MulticastSpawnTracerEffect`
+* ~~`ServerFireWeapon`~~ -> `S_FireWeapon`
+* ~~`ClientNotifyDeath`~~ -> `O_NotifyDeath`
+* ~~`MulticastSpawnTracerEffect`~~ -> `M_SpawnTracerEffect`
 
 Bad examples:
 
@@ -1200,7 +1184,7 @@ The following nodes are not counted as they are deemed to not increase function 
 
 This rule applies more to public facing or marketplace blueprints, so that others can more easily navigate and consume your blueprint API.
 
-Simply, any function that has an access specificer of Public should have its description filled out.
+Simply, any function that has an access specificer of Public should have its description filled out. **IF YOU PLAN TO PUBLISH IT IN MARKETPLACE.**
 
 <a name="3.3.5"></a>
 <a name="bp-graphs-funcs-plugin-category"></a>
@@ -1209,6 +1193,8 @@ Simply, any function that has an access specificer of Public should have its des
 If your project includes a plugin that defines `static` `BlueprintCallable` functions, they should have their category set to the plugin's name or a subset category of the plugin's name.
 
 For example, `Zed Camera Interface` or `Zed Camera Interface | Image Capturing`.
+
+This is for better search capabilities and to avoid name collisions.
 
 <a name="3.4"></a>
 <a name="bp-graphs"></a>
@@ -1227,6 +1213,11 @@ Wires should have clear beginnings and ends. You should never have to mentally u
 #### 3.4.2 Align Wires Not Nodes
 
 Always align wires, not nodes. You can't always control the size and pin location on a node, but you can always control the location of a node and thus control the wires. Straight wires provide clear linear flow. Wiggly wires wear wits wickedly. You can straighten wires by using the Straighten Connections command with BP nodes selected. Hotkey: Q
+
+I like to use these two plugins to change the node visuals and wiring:
+**FlatNodes** - https://www.fab.com/listings/7305134c-8f1c-46f4-aa9c-14381074aba5
+**Electronic Nodes** - https://www.fab.com/listings/d6148766-27b1-47db-a730-832c53b7a895
+
 
 Good example: The tops of the nodes are staggered to keep a perfectly straight white exec line.
 ![Aligned By Wires](https://github.com/Allar/ue5-style-guide/blob/main/images/bp-graphs-align-wires-good.png?raw=true "Aligned By Wires")
@@ -1434,26 +1425,3 @@ No texture should have a dimension that exceeds 8192 in size, unless you have a 
 Every texture has a Texture Group property used for LODing, and this should be set correctly based on its use. For example, all UI textures should belong in the UI texture group.
 
 **[⬆ Back to Top](#table-of-contents)**
-
-
-## Major Contributors
-
-* [Michael Allar](http://allarsblog.com): [GitHub](https://github.com/Allar), [Twitter](https://twitter.com/michaelallar)
-* [CosmoMyzrailGorynych](https://github.com/CosmoMyzrailGorynych)
-* [billymcguffin](https://github.com/billymcguffin)
-* [akenatsu](https://github.com/akenatsu)
-
-## License
-
-Copyright (c) 2016 Gamemakin LLC
-
-See [LICENSE](/LICENSE)
-
-**[⬆ Back to Top](#table-of-contents)**
-
-
-## Amendments
-
-We encourage you to fork this guide and change the rules to fit your team's style guide. Below, you may list some amendments to the style guide. This allows you to periodically update your style guide without having to deal with merge conflicts.
-
-# };
