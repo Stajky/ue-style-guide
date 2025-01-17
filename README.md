@@ -1259,15 +1259,31 @@ All nodes in all blueprint graphs must have a purpose. You should not leave dang
 
 ## 4. Cpp
 
-
 ### Rider VS Visual Studio 
-TLDR Use Rider
+Visual Studio has improved a lot, but I still think Rider is better. Its auto-class creation and search features are much easier to use. Plus, Rider automatically includes things for you and even keeps track of blueprints linked to C++ files.
+
+Simply put use Rider
 
 ### Naming
-### Choose a Short abbreviation for all of your files
-Use the same naming principle as 
-#### Use the same naming convention you use in assets
-#### Keep Unreal Naming
+The same rules apply as in the blueprint here I will outline some notes specific to cpp.
+
+#### Short abbreviation prefix
+In my projects, I like to add a short prefix, usually 2-4 letters, to all my files based on the project’s code name. This helps avoid naming conflicts with Unreal classes and makes searching in Rider easier. For example, if you type “Medi,” you’ll know you’re specifically looking for files from your project.
+
+Example:
+* `MediGameState`
+* `MediPlayerController`
+* `MediGameState_Driving`
+
+#### Keep to Unreal Naming Conventions
+As I mentioned before, the same principles that apply to blueprints also apply here, so refer to the blueprint sections for naming conventions. That said, while many rules are enforced and will prevent the program from compiling, some aren’t but still should be followed.
+
+Only Signatures Comes to mind, but I will fill this up more in the future:
+
+| Type                    | Prefix     | Suffix     | Notes                            |
+| ----------------------- | ---------- | ---------- | -------------------------------- |
+| `Delegate`              |            | Delegate   | alternative is Signature but I like `Delegate` more |
+| `DelegateHandle`        |            | DelegateHandle           |                                  |
 
 #### Prefix BlueprintImplementableEvent function name with `BP_`
 When naming BlueprintImplementableEvent functions, prefix them with `BP_`. These events are defined in Blueprints but callable from C++, and the BP_ prefix, as used in Lyra, helps clearly identify their purpose and distinguishes them from other functions.
@@ -1281,8 +1297,9 @@ As as for the blueprint event names use `S_` for `Server`, `O` for client (since
 After the prefix, follow all other rules regarding function naming.
 
 Examples:
-* ~~`ServerFireWeapon`~~ -> `S_FireWeapon`
-* ~~`ClientNotifyDeath`~~ -> `O_NotifyDeath`
+* `S_FireWeapon`
+* `O_NotifyDeath`
+* `SBP_ActivateTransformTimeline`
 
 ### Separate functions from variables
 
@@ -1294,15 +1311,15 @@ if you can that is
 ### Comment Section
 use comments to create pseudo sections in your code where it makes sense
 
-#### When overriding something comment from where we are overriding
-While not completely necessary adding information from where we 
+#### Comment implemented function origin
+When Implementing an interface function use comment While not completely necessary adding this information helps to faster identify used interface
 ```
 /* Start of IGridObjectInterface*/
 virtual UUserWidget* GetWidget_Implementation() override;
 /*~ End of IGridObjectInterface*/
 ```
 
-### use forward declaration as much as you can
+### Use forward declaration as much as you can
 In Unreal Engine (or C++ in general), forward declarations are used to improve compile times, reduce unnecessary dependencies, and manage circular dependencies effectively. They are particularly useful in Unreal Engine projects because of the complexity of large codebases and the heavy use of classes.
 
 ### Use TObjectPtr
