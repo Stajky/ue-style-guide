@@ -317,13 +317,13 @@ When naming an asset, use these tables to determine the prefix and suffix to use
 | Level (Lighting)        |            | _Lighting  |                                  |
 | Level (Geometry)        |            | _Geo       |                                  |
 | Level (Gameplay)        |            | _Gameplay  |                                  |
-| Blueprint               | BP_        |            |                                  |
+| Blueprint               | BP_        |            | Nowadays a shift is happening towards B_ but since BP is still dominating in other assets I keep using it |
 | Material                | M_         |            |                                  |
-| Static Mesh             | S_         |            | Many use SM_. We use S_.         |
+| Static Mesh             | SM_        |            |                                  |
 | Skeletal Mesh           | SK_        |            |                                  |
 | Texture                 | T_         | _?         | See [Textures](#anc-textures)    |
 | Particle System         | PS_        |            |                                  |
-| Widget Blueprint        | WBP_       |            |                                  |
+| Widget Blueprint        | WBP_       |            | Nowadays a shift is happening towards W_ but since BP is still dominating in other assets I keep using it |
 
 <a name="anc-animations"></a>
 <a name="1.2.2"></a>
@@ -435,7 +435,7 @@ Packing 4 channels of data into a texture (RGBA) is not recommended except for a
 | Camera Anim                | CA_        |            |                                  |
 | Color Curve                | Curve_     | _Color     |                                  |
 | Curve Table                | Curve_     | _Table     |                                  |
-| Data Asset                 | *_         |            | Prefix should be based on class. |
+| Data Asset                 | DA_{Class name}        |            | Class name should be based on the class it is created from |
 | Data Table                 | DT_        |            |                                  |
 | Float Curve                | Curve_     | _Float     |                                  |
 | Foliage Type               | FT_        |            |                                  |
@@ -1255,6 +1255,80 @@ This does not mean every cast node should have its failure handled. In many case
 All nodes in all blueprint graphs must have a purpose. You should not leave dangling blueprint nodes around that have no purpose or are not executed.
 
 **[⬆ Back to Top](#table-of-contents)**
+
+
+## 4. Cpp
+
+
+### Rider VS Visual Studio 
+TLDR Use Rider
+
+### Naming
+### Choose a Short abbreviation for all of your files
+Use the same naming principle as 
+#### Use the same naming convention you use in assets
+#### Keep Unreal Naming
+
+#### Prefix BlueprintImplementableEvent function name with `BP_`
+When naming BlueprintImplementableEvent functions, prefix them with `BP_`. These events are defined in Blueprints but callable from C++, and the BP_ prefix, as used in Lyra, helps clearly identify their purpose and distinguishes them from other functions.
+
+Example:
+* `BP_ActivateTransformTimeline`
+
+#### Differenciate RPCs
+As as for the blueprint event names use `S_` for `Server`, `O` for client (since its replicating to owning client not just any client) and `M_` for Multicast 
+
+After the prefix, follow all other rules regarding function naming.
+
+Examples:
+* ~~`ServerFireWeapon`~~ -> `S_FireWeapon`
+* ~~`ClientNotifyDeath`~~ -> `O_NotifyDeath`
+
+### Separate functions from variables
+
+### Immutable first
+use const everywhere 
+use references everywhere 
+if you can that is
+
+### Comment Section
+use comments to create pseudo sections in your code where it makes sense
+
+#### When overriding something comment from where we are overriding
+While not completely necessary adding information from where we 
+```
+/* Start of IGridObjectInterface*/
+virtual UUserWidget* GetWidget_Implementation() override;
+/*~ End of IGridObjectInterface*/
+```
+
+### use forward declaration as much as you can
+In Unreal Engine (or C++ in general), forward declarations are used to improve compile times, reduce unnecessary dependencies, and manage circular dependencies effectively. They are particularly useful in Unreal Engine projects because of the complexity of large codebases and the heavy use of classes.
+
+### Use TObjectPtr
+Use TObjectPtr because it enhances reflection in Unreal Engine, providing better error logs and debugging. Its small editor performance cost is eliminated in cooked builds, where it converts to a raw pointer.
+  
+
+###Project structure
+### use Modules or Plugins when the opportunity arises
+### use UI Folder 
+### use Core Folder
+this folder is reserved for big classes like GameMode, GameState etc.
+### use the public/private folder structure
+for game it doesnt matter that much, but I would still follow it
+the reason for public/private is when integrating this module to other so that you can see the functions
+
+
+The Cpp and 
+|-- Public
+|    |-- Core
+|    |-- UI
+|    |-- LogicalCollection1 - Ability system
+|    |-- LogicalCollection2 - GMS
+|    |-- LogicalCollection3 - ...
+
+|-- Private
+|    |-- Same as Public
 
 
 <a name="4"></a>
