@@ -1,4 +1,4 @@
-# UE4 Style Guide() 
+# UE Style Guide() 
 
 This repo is for how to manage unreal project assets, handle naming and overall guidelines.
 
