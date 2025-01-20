@@ -1408,15 +1408,16 @@ For plugins or standalone modules, though, the public/private structure is a mus
 #### Example
 Example of how a project could look like
 ```
-|-- Public
-|    |-- Core
-|    |-- UILibrary
-|    |-- LogicalCollection1 - Ability system
-|    |-- LogicalCollection2 - GMS
-|    |-- LogicalCollection3 - ...
+|-- ProjectName
+|    |-- Public
+|    |    |-- Core
+|    |    |-- UILibrary
+|    |    |-- LogicalCollection1 - Ability system
+|    |    |-- LogicalCollection2 - GMS
+|    |    |-- LogicalCollection3 - ...
 
-|-- Private
-|    |-- Same as Public
+|    |-- Private
+|    |    |-- Same as Public
 ```
 
 <a name="4"></a>
