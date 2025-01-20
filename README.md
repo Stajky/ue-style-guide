@@ -109,6 +109,25 @@ The original repository provides a Linter plugin I don't deem it necessary to us
     - [3.4.4 Graphs Should Be Reasonably Commented](#bp-graphs-block-comments)
     - [3.4.5 Graphs Should Handle Casting Errors Where Appropriate](#bp-graphs-cast-error-handling)
     - [3.4.6 Graphs Should Not Have Any Dangling / Loose / Dead Nodes](#bp-graphs-dangling-nodes)
+- [4. C++](#cpp)
+    - [4.1 Rider vs Visual Studio](#cpp-rider-vs-visual)
+    - [4.2 Naming](#cpp-naming)
+    	- [4.2.1 Short abbreviation prefix](#cpp-naming-abbreviation)
+        - [4.2.2 Keep to Unreal Naming Conventions](#cpp-naming-unreal-naming-conventions)
+        - [4.2.3 Prefix BlueprintImplementableEvent function name with `BP_`](#cpp-naming-blueprintimplementableevent)
+        - [4.2.4 Differentiate RPCs](#cpp-naming-differentiate-rpcs)
+    - [4.3 Separate methods from variables in class](#cpp-separate-methods-and-variables)
+    - [4.4 Dont copy & use const](#cpp-dont-copy-use-const)
+    - [4.5 Comment Section](#cpp-comment-section)
+        - [4.5.1 Comment implemented method origin](#cpp-comment-section-method-origin)
+    - [4.6 Use forward declaration as much as you can](#cpp-forward-declaration)
+    - [4.7 Use TObjectPtr](#cpp-tobjectptr)
+    - [4.8 Project structure](#cpp-project-structure)
+    	- [4.8.1 Use Modules or Plugins when the opportunity arises](#cpp-project-structure-modules-or-plugin)
+        - [4.8.2 Use UI Folder?](#cpp-project-structure-ui-folder)
+        - [4.8.3 Use Core Folder](#cpp-project-structure-core-folder)
+        - [4.8.4 Use the public/private folder structure?](#cpp-project-structure-public-private-folder)
+        - [4.8.5 Example](#cpp-project-structure-example)
 - [5. Static Meshes](#4)
   - [5.1 Static Mesh UVs](#s-uvs)
     - [5.1.1 All Meshes Must Have UVs](#s-uvs-no-missing)
@@ -1256,25 +1275,30 @@ All nodes in all blueprint graphs must have a purpose. You should not leave dang
 
 **[⬆ Back to Top](#table-of-contents)**
 
-
+<a name="cpp"></a>
 ## 4. Cpp
-### Rider vs Visual Studio 
+
+<a name="cpp-rider-vs-visual"></a>
+### 4.1 Rider vs Visual Studio 
 Visual Studio has improved a lot, but I still think Rider is better. Its auto-class creation and search features are much easier to use. Plus, Rider automatically includes things for you and even keeps track of blueprints linked to C++ files.
 
 Simply put use Rider
 
-### Naming
+<a name="cpp-naming"></a>
+### 4.2 Naming
 The same rules apply as in the blueprint here I will outline some notes specific to cpp.
 
-#### Short abbreviation prefix
+<a name="cpp-naming-abbreviation"></a>
+#### 4.2.1 Short abbreviation prefix
 In my projects, I like to add a short prefix, usually 2-4 letters, to all my files based on the project’s code name. This helps avoid naming conflicts with Unreal classes and makes searching in Rider easier. For example, if you type “Medi,” you’ll know you’re specifically looking for files from your project.
 
 Example:
 * `MediGameState`
 * `MediPlayerController`
 * `MediGameState_Driving`
-
-#### Keep to Unreal Naming Conventions
+  
+<a name="cpp-naming-unreal-naming-conventions"></a>
+#### 4.2.2 Keep to Unreal Naming Conventions
 As I mentioned before, the same principles that apply to blueprints also apply here, so refer to the blueprint sections for naming conventions. That said, while many rules are enforced and will prevent the program from compiling, some aren’t but still should be followed.
 
 Only Signatures Comes to mind, but I will fill this up more in the future:
@@ -1284,13 +1308,15 @@ Only Signatures Comes to mind, but I will fill this up more in the future:
 | `Delegate`              |            | Delegate   | alternative is `Signature` but I like `Delegate` more |
 | `DelegateHandle`        |            | DelegateHandle           |                                  |
 
-#### Prefix BlueprintImplementableEvent function name with `BP_`
+<a name="cpp-naming-blueprintimplementableevent"></a>
+#### 4.2.3 Prefix BlueprintImplementableEvent function name with `BP_`
 When naming BlueprintImplementableEvent functions, prefix them with `BP_`. These events are defined in Blueprints but callable from C++, and the BP_ prefix, as used in Lyra, helps clearly identify their purpose and distinguishes them from other functions.
 
 Example:
 * `BP_ActivateTransformTimeline`
-
-#### Differenciate RPCs
+  
+<a name="cpp-naming-differentiate-rpcs"></a>
+#### 4.2.4 Differentiate RPCs
 As for the blueprint event names use `S_` for `Server`, `O` for client (since it replicates to owning client not just any client), and `M_` for Multicast 
 
 After the prefix, follow all other rules regarding function naming.
@@ -1299,8 +1325,9 @@ Examples:
 * `S_FireWeapon`
 * `O_NotifyDeath`
 * `SBP_ActivateTransformTimeline` (BlueprintImplementableEvent)
-
-### Separate methods from variables in class
+  
+<a name="cpp-separate-methods-and-variables"></a>
+### 4.3 Separate methods from variables in class
 I like to organize my code by putting all the methods at the top of the class and the variables at the bottom. This way, functionality and data are clearly separated.
 
 Grouping them by relevance to each other is an alternative, but in my experience, it gets messy and hard to figure out where everything belongs. If you prefer keeping things grouped by relevance, adding clear comment sections can help keep it manageable.
@@ -1349,36 +1376,42 @@ private:
 };
 ```
 
-### Dont copy use const
+<a name="cpp-dont-copy-use-const"></a>
+### 4.4 Dont copy & use const
 In C++, it’s generally a good practice to use const and references it became sort of a standard. Start with const references for method arguments to make your code safer and more efficient, and only change them if absolutely necessary.
 
 **TLDR**:
 - use const everywhere you can
 - use references everywhere you can
 
-
-### Comment Section
+<a name="cpp-comment-section"></a>
+### 4.5 Comment Section
 Use comments to create pseudo sections in your code where some relevance exists. 
 
 This is nice to have so it is not 100% necessary.
 
-#### Comment implemented function origin
-When Implementing an interface function use comment While not completely necessary adding this information helps to faster identify the used interface
+<a name="cpp-comment-section-method-origin"></a>
+#### 4.5.1 Comment implemented method origin
+When Implementing an interface method use comment While not completely necessary adding this information helps to faster identify the used interface
 ```
 /* Start of IGridObjectInterface*/
 virtual UUserWidget* GetWidget_Implementation() override;
 /*~ End of IGridObjectInterface*/
 ```
 
-### Use forward declaration as much as you can
+<a name="cpp-forward-declaration"></a>
+### 4.6 Use forward declaration as much as you can
 In Unreal Engine (or C++ in general), forward declarations are used to improve compile times, reduce unnecessary dependencies, and manage circular dependencies effectively. They are particularly useful in Unreal Engine projects because of the complexity of large codebases and the heavy use of classes.
 
-### Use TObjectPtr
+<a name="cpp-tobjectptr"></a>
+### 4.7 Use TObjectPtr
 Use TObjectPtr because it enhances reflection in Unreal Engine, providing better error logs and debugging. Its small editor performance cost is eliminated in cooked builds, where it converts to a raw pointer.
   
+<a name="cpp-project-structure"></a>
+### 4.8 Project structure
 
-### Project structure
-#### Use Modules or Plugins when the opportunity arises
+<a name="cpp-project-structure-modules-or-plugin"></a>
+#### 4.8.1 Use Modules or Plugins when the opportunity arises
 Unreal offers two main ways to organize code into logical modules: Modules and Plugins.
 
 Modules are specific to a project, and sharing them between projects typically involves copy-pasting. Plugins, on the other hand, are more sophisticated. They can be uploaded to Fab (if they meet UE requirements) and kept separate from your main project. Both serve the same purpose—organizing code.
@@ -1387,25 +1420,28 @@ Use plugins when it makes sense, but avoid over-organizing. Keep in mind that pl
 
 Plugins also allow you to control when they’re loaded. This can be important for managing dependencies. For example, if you need functionality during the loading phase, like a loading screen, you’d use the PreLoadingScreen phase.
 
-#### Use UI Folder?
+<a name="cpp-project-structure-ui-folder"></a>
+#### 4.8.2 Use UI Folder?
 I’m still unsure whether it’s better to use a single UI folder for all widgets. On one hand, it’s convenient to have all UI elements in one place, but on the other, you lose the context of where each widget is used.
 
 Right now, I prefer not to use a general UI folder. Instead, I’d go for something like a `UILibrary` folder, similar to a `MaterialLibrary`. This folder would hold reusable widgets, like buttons, that can be used across other widgets.
 
-#### Use Core Folder
+<a name="cpp-project-structure-core-folder"></a>
+#### 4.8.3 Use Core Folder
 This folder is meant for major Unreal classes like GameMode or GameState, the core elements of your game. However, classes like PersistenceManager, which function more as an entire system, shouldn’t go here. They deserve their own dedicated folder.
 
 Similarly, an EnemyCharacter class might fit here if it’s a key class high up in the inheritance tree. But if you have more specific variations, like EnemyCharacter_Tank, those should go in a folder like Characters/Enemy to keep things organized. 
 
-#### Use the public/private folder structure?
+<a name="cpp-project-structure-public-private-folder"></a>
+#### 4.8.4 Use the public/private folder structure?
 The public/private folder structure is important for making code accessible from other modules. While your game project is technically a module, you’re not usually sharing its functionality with others, so this structure matters more for other modules and plugins.
 
 In your game project, it’s fine to follow the public/private structure, but you don’t have to. Just pick one approach and stick with it. If you skip it, one benefit is that .h and .cpp files can sit next to each other, which some people prefer.
 
 For plugins or standalone modules, though, the public/private structure is a must. Without it, you’ll run into issues, and debugging why things don’t work can be a headache.
 
-
-#### Example
+<a name="cpp-project-structure-example"></a>
+#### 4.8.5 Example
 Example of how a project could look like
 ```
 |-- ProjectName
