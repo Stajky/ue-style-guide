@@ -109,28 +109,28 @@ The original repository provides a Linter plugin I don't deem it necessary to us
     - [3.4.4 Graphs Should Be Reasonably Commented](#bp-graphs-block-comments)
     - [3.4.5 Graphs Should Handle Casting Errors Where Appropriate](#bp-graphs-cast-error-handling)
     - [3.4.6 Graphs Should Not Have Any Dangling / Loose / Dead Nodes](#bp-graphs-dangling-nodes)
-- [4. Static Meshes](#4)
-  - [4.1 Static Mesh UVs](#s-uvs)
-    - [4.1.1 All Meshes Must Have UVs](#s-uvs-no-missing)
-    - [4.1.2 All Meshes Must Not Have Overlapping UVs for Lightmaps](#s-uvs-no-overlapping)
-  - [4.2 LODs Should Be Set Up Correctly](#s-lods)
-  - [4.3 Modular Socketless Assets Should Snap To The Grid Cleanly](#s-modular-snapping)
-  - [4.4 All Meshes Must Have Collision](#s-collision)
-  - [4.5 All Meshes Should Be Scaled Correctly](#s-scaled)
-- [5. Niagara](#Niagara)
-  - [5.1 No Spaces, Ever](#ng-rules)
-- [6. Levels / Maps](#levels)
-  - [6.1 No Errors Or Warnings](#levels-no-errors-or-warnings)
-  - [6.2 Lighting Should Be Built](#levels-lighting-should-be-built)
-  - [6.3 No Player Visible Z Fighting](#levels-no-visible-z-fighting)
-  - [6.4 Marketplace Specific Rules](#levels-mp-rules)
-    - [6.4.1 Overview Level](#levels-mp-rules-overview)
-    - [6.4.2 Demo Level](#levels-mp-rules-demo)
-- [7. Textures](#textures)
-  - [7.1 Dimensions Are Powers of 2](#textures-dimensions)
-  - [7.2 Texture Density Should Be Uniform](#textures-density)
-  - [7.3 Textures Should Be No Bigger than 8192](#textures-max-size)
-  - [7.4 Textures Should Be Grouped Correctly](#textures-group)
+- [5. Static Meshes](#4)
+  - [5.1 Static Mesh UVs](#s-uvs)
+    - [5.1.1 All Meshes Must Have UVs](#s-uvs-no-missing)
+    - [5.1.2 All Meshes Must Not Have Overlapping UVs for Lightmaps](#s-uvs-no-overlapping)
+  - [5.2 LODs Should Be Set Up Correctly](#s-lods)
+  - [5.3 Modular Socketless Assets Should Snap To The Grid Cleanly](#s-modular-snapping)
+  - [5.4 All Meshes Must Have Collision](#s-collision)
+  - [5.5 All Meshes Should Be Scaled Correctly](#s-scaled)
+- [6. Niagara](#Niagara)
+  - [6.1 No Spaces, Ever](#ng-rules)
+- [7. Levels / Maps](#levels)
+  - [7.1 No Errors Or Warnings](#levels-no-errors-or-warnings)
+  - [7.2 Lighting Should Be Built](#levels-lighting-should-be-built)
+  - [7.3 No Player Visible Z Fighting](#levels-no-visible-z-fighting)
+  - [7.4 Marketplace Specific Rules](#levels-mp-rules)
+    - [7.4.1 Overview Level](#levels-mp-rules-overview)
+    - [7.4.2 Demo Level](#levels-mp-rules-demo)
+- [8. Textures](#textures)
+  - [8.1 Dimensions Are Powers of 2](#textures-dimensions)
+  - [8.2 Texture Density Should Be Uniform](#textures-density)
+  - [8.3 Textures Should Be No Bigger than 8192](#textures-max-size)
+  - [8.4 Textures Should Be Grouped Correctly](#textures-group)
 
 ## Important Terminology
 
@@ -1258,8 +1258,7 @@ All nodes in all blueprint graphs must have a purpose. You should not leave dang
 
 
 ## 4. Cpp
-
-### Rider VS Visual Studio 
+### Rider vs Visual Studio 
 Visual Studio has improved a lot, but I still think Rider is better. Its auto-class creation and search features are much easier to use. Plus, Rider automatically includes things for you and even keeps track of blueprints linked to C++ files.
 
 Simply put use Rider
@@ -1378,62 +1377,82 @@ In Unreal Engine (or C++ in general), forward declarations are used to improve c
 Use TObjectPtr because it enhances reflection in Unreal Engine, providing better error logs and debugging. Its small editor performance cost is eliminated in cooked builds, where it converts to a raw pointer.
   
 
-###Project structure
-### use Modules or Plugins when the opportunity arises
-### use UI Folder 
-### use Core Folder
-this folder is reserved for big classes like GameMode, GameState etc.
-### use the public/private folder structure
-for game it doesnt matter that much, but I would still follow it
-the reason for public/private is when integrating this module to other so that you can see the functions
+### Project structure
+#### Use Modules or Plugins when the opportunity arises
+Unreal offers two main ways to organize code into logical modules: Modules and Plugins.
+
+Modules are specific to a project, and sharing them between projects typically involves copy-pasting. Plugins, on the other hand, are more sophisticated. They can be uploaded to Fab (if they meet UE requirements) and kept separate from your main project. Both serve the same purpose—organizing code.
+
+Use plugins when it makes sense, but avoid over-organizing. Keep in mind that plugins don’t automatically have access to game classes unless you explicitly include them, which can limit interconnectivity.
+
+Plugins also allow you to control when they’re loaded. This can be important for managing dependencies. For example, if you need functionality during the loading phase, like a loading screen, you’d use the PreLoadingScreen phase.
+
+#### Use UI Folder?
+I’m still unsure whether it’s better to use a single UI folder for all widgets. On one hand, it’s convenient to have all UI elements in one place, but on the other, you lose the context of where each widget is used.
+
+Right now, I prefer not to use a general UI folder. Instead, I’d go for something like a `UILibrary` folder, similar to a `MaterialLibrary`. This folder would hold reusable widgets, like buttons, that can be used across other widgets.
+
+#### Use Core Folder
+This folder is meant for major Unreal classes like GameMode or GameState, the core elements of your game. However, classes like PersistenceManager, which function more as an entire system, shouldn’t go here. They deserve their own dedicated folder.
+
+Similarly, an EnemyCharacter class might fit here if it’s a key class high up in the inheritance tree. But if you have more specific variations, like EnemyCharacter_Tank, those should go in a folder like Characters/Enemy to keep things organized. 
+
+#### Use the public/private folder structure?
+The public/private folder structure is important for making code accessible from other modules. While your game project is technically a module, you’re not usually sharing its functionality with others, so this structure matters more for other modules and plugins.
+
+In your game project, it’s fine to follow the public/private structure, but you don’t have to. Just pick one approach and stick with it. If you skip it, one benefit is that .h and .cpp files can sit next to each other, which some people prefer.
+
+For plugins or standalone modules, though, the public/private structure is a must. Without it, you’ll run into issues, and debugging why things don’t work can be a headache.
 
 
-The Cpp and 
+#### Example
+Example of how a project could look like
+```
 |-- Public
 |    |-- Core
-|    |-- UI
+|    |-- UILibrary
 |    |-- LogicalCollection1 - Ability system
 |    |-- LogicalCollection2 - GMS
 |    |-- LogicalCollection3 - ...
 
 |-- Private
 |    |-- Same as Public
-
+```
 
 <a name="4"></a>
 <a name="Static Meshes"></a>
 <a name="s"></a>
-## 4. Static Meshes
+## 5. Static Meshes
 
 This section will focus on Static Mesh assets and their internals.
 
 <a name="4.1"></a>
 <a name="s-uvs"></a>
-### 4.1 Static Mesh UVs
+### 5.1 Static Mesh UVs
 
 If Linter is reporting bad UVs and you can't seem to track it down, open the resulting `.log` file in your project's `Saved/Logs` folder for exact details as to why it's failing. I am hoping to include these messages in the Lint report in the future.
 
 <a name="4.1.1"></a>
 <a name="s-uvs-no-missing"></a>
-#### 4.1.1 All Meshes Must Have UVs
+#### 5.1.1 All Meshes Must Have UVs
 
 Pretty simple. All meshes, regardless how they are to be used, should not be missing UVs.
 
 <a name="4.1.2"></a>
 <a name="s-uvs-no-overlapping"></a>
-#### 4.1.2 All Meshes Must Not Have Overlapping UVs for Lightmaps
+#### 5.1.2 All Meshes Must Not Have Overlapping UVs for Lightmaps
 
 Pretty simple. All meshes, regardless how they are to be used, should have valid non-overlapping UVs.
 
 <a name="4.2"></a>
 <a name="s-lods"></a>
-### 4.2 LODs Should Be Set Up Correctly
+### 5.2 LODs Should Be Set Up Correctly
 
 This is a subjective check on a per-project basis, but as a general rule any mesh that can be seen at varying distances should have proper LODs.
 
 <a name="4.3"></a>
 <a name="s-modular-snapping"></a>
-### 4.3 Modular Socketless Assets Should Snap To The Grid Cleanly
+### 5.3 Modular Socketless Assets Should Snap To The Grid Cleanly
 
 This is a subjective check on a per-asset basis, however any modular socketless assets should snap together cleanly based on the project's grid settings.
 
@@ -1441,13 +1460,13 @@ It is up to the project whether to snap based on a power of 2 grid or on a base 
 
 <a name="4.4"></a>
 <a name="s-collision"></a>
-### 4.4 All Meshes Must Have Collision
+### 5.4 All Meshes Must Have Collision
 
 Regardless of whether an asset is going to be used for collision in a level, all meshes should have proper collision defined. This helps the engine with things such as bounds calculations, occlusion, and lighting. Collision should also be well-formed to the asset.
 
 <a name="4.5"></a>
 <a name="s-scaled"></a>
-### 4.5 All Meshes Should Be Scaled Correctly
+### 5.5 All Meshes Should Be Scaled Correctly
 
 This is a subjective check on a per-project basis, however all assets should be scaled correctly to their project. Level designers or blueprint authors should not have to tweak the scale of meshes to get them to confirm in the editor. Scaling meshes in the engine should be treated as a scale override, not a scale correction.
 
@@ -1457,13 +1476,13 @@ This is a subjective check on a per-project basis, however all assets should be 
 <a name="5"></a>
 <a name="Niagara"></a>
 <a name="ng"></a>
-## 5. Niagara
+## 6. Niagara
 
 This section will focus on Niagara assets and their internals.
 
 <a name="5.1"></a>
 <a name="ng-rules"></a>
-### 5.1 No Spaces, Ever
+### 6.1 No Spaces, Ever
 
 As mentioned in [00.1 Forbidden Identifiers](#00), spaces and all white space characters are forbidden in identifiers. This is especially true for Niagara systems as it makes working with things significantly harder if not impossible when working with HLSL or other means of scripting within Niagara and trying to reference an identifier.
 
@@ -1476,7 +1495,7 @@ As mentioned in [00.1 Forbidden Identifiers](#00), spaces and all white space ch
 <a name="6"></a>
 <a name="Levels"></a>
 <a name="levels"></a>
-## 6. Levels / Maps
+## 7. Levels / Maps
 
 [See Terminology Note](#terms-level-map) regarding "levels" vs "maps".
 
@@ -1484,7 +1503,7 @@ This section will focus on Level assets and their internals.
 
 <a name="6.1"></a>
 <a name="levels-no-errors-or-warnings"></a>
-### 6.1 No Errors Or Warnings
+### 7.1 No Errors Or Warnings
 
 All levels should load with zero errors or warnings. If a level loads with any errors or warnings, they should be fixed immediately to prevent cascading issues.
 
@@ -1494,25 +1513,25 @@ Please note: Linter is even more strict on this than the editor is currently, an
 
 <a name="6.2"></a>
 <a name="levels-lighting-should-be-built"></a>
-### 6.2 Lighting Should Be Built
+### 7.2 Lighting Should Be Built
 
 It is normal during development for levels to occasionally not have lighting built. When doing a test/internal/shipping build or any build that is to be distributed however, lighting should always be built.
 
 <a name="6.3"></a>
 <a name="levels-no-visible-z-fighting"></a>
-### 6.3 No Player Visible Z Fighting
+### 7.3 No Player Visible Z Fighting
 
 Levels should not have any [z-fighting](https://en.wikipedia.org/wiki/Z-fighting) in all areas visible to the player.
 
 <a name="6.4"></a>
 <a name="levels-mp-rules"></a>
-### 6.4 Marketplace Specific Rules
+### 7.4 Marketplace Specific Rules
 
 If a project is to be sold on the UE4 Marketplace, it must follow these rules.
 
 <a name="6.4.1"></a>
 <a name="levels-mp-rules-overview"></a>
-#### 6.4.1 Overview Level
+#### 7.4.1 Overview Level
 
 If your project contains assets that should be visualized or demoed, you must have a map within your project that contains the name "Overview".
 
@@ -1522,7 +1541,7 @@ For example, `InteractionComponent_Overview`.
 
 <a name="6.4.2"></a>
 <a name="levels-mp-rules-demo"></a>
-#### 6.4.2 Demo Level
+#### 7.4.2 Demo Level
 
 If your project contains assets that should be demoed or come with some sort of tutorial, you must have a map within your project that contains the name "Demo". This level should also contain documentation within it in some form that illustrates how to use your project. See Epic's Content Examples project for good examples on how to do this.
 
@@ -1535,13 +1554,13 @@ For example, `InteractionComponent_Overview_Demo`, `ExplosionKit_Demo`.
 
 <a name="7"></a>
 <a name="textures"></a>
-## 7. Textures
+## 8. Textures
 
 This section will focus on Texture assets and their internals.
 
 <a name="7.1"></a>
 <a name="textures-dimensions"></a>
-### 7.1 Dimensions Are Powers of 2
+### 8.1 Dimensions Are Powers of 2
 
 All textures, except for UI textures, must have its dimensions in multiples of powers of 2. Textures do not have to be square.
 
@@ -1549,7 +1568,7 @@ For example, `128x512`, `1024x1024`, `2048x1024`, `1024x2048`, `1x512`.
 
 <a name="7.2"></a>
 <a name="textures-density"></a>
-### 7.2 Texture Density Should Be Uniform
+### 8.2 Texture Density Should Be Uniform
 
 All textures should be of a size appropriate for their standard use case. Appropriate texture density varies from project to project, but all textures within that project should have a consistent density.
 
@@ -1557,13 +1576,13 @@ For example, if a project's texture density is 8 pixel per 1 unit, a texture tha
 
 <a name="7.3"></a>
 <a name="textures-max-size"></a>
-### 7.3 Textures Should Be No Bigger than 8192
+### 8.3 Textures Should Be No Bigger than 8192
 
 No texture should have a dimension that exceeds 8192 in size, unless you have a very explicit reason to do so. Often, using a texture this big is simply just a waste of resources.
 
 <a name="7.4"></a>
 <a name="textures-group"></a>
-### 7.4 Textures Should Be Grouped Correctly
+### 8.4 Textures Should Be Grouped Correctly
 
 Every texture has a Texture Group property used for LODing, and this should be set correctly based on its use. For example, all UI textures should belong in the UI texture group.
 
