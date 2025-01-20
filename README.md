@@ -1456,6 +1456,8 @@ Example of how a project could look like
 |    |    |-- Same as Public
 ```
 
+**[⬆ Back to Top](#table-of-contents)**
+
 <a name="4"></a>
 <a name="Static Meshes"></a>
 <a name="s"></a>
