@@ -1,8 +1,8 @@
 # UE Style Guide
 
-This repo is for how to manage unreal project assets, handle naming and overall guidelines.
+This repo is for how to manage unreal project assets, handle naming, and overall guidelines.
 
-The goal here is to create a sustainable project structure that will be easily maintained and the work of multiple developer possible.
+The goal here is to create a sustainable project structure that will be easily maintained by multiple developers.
 
 Heavily inspired by https://github.com/Allar/ue5-style-guide
 
