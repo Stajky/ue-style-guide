@@ -1414,7 +1414,7 @@ Use TObjectPtr because it enhances reflection in Unreal Engine, providing better
 #### 4.8.1 Use Modules or Plugins when the opportunity arises
 Unreal offers two main ways to organize code into logical modules: Modules and Plugins.
 
-Modules are specific to a project, and sharing them between projects typically involves copy-pasting. Plugins, on the other hand, are more sophisticated. They can be uploaded to Fab (if they meet UE requirements) and kept separate from your main project. Both serve the same purpose—organizing code.
+Modules are specific to a project, and sharing them between projects typically involves copy-pasting. Plugins, on the other hand, are more sophisticated. They can be uploaded to Fab (if they meet UE requirements) and kept separate from your main project. Both serve the same purpose -> organizing code.
 
 Use plugins when it makes sense, but avoid over-organizing. Keep in mind that plugins don’t automatically have access to game classes unless you explicitly include them, which can limit interconnectivity.
 
