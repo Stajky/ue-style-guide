@@ -1,4 +1,4 @@
-# UE Style Guide() 
+# UE Style Guide
 
 This repo is for how to manage unreal project assets, handle naming and overall guidelines.
 
@@ -1282,7 +1282,7 @@ Only Signatures Comes to mind, but I will fill this up more in the future:
 
 | Type                    | Prefix     | Suffix     | Notes                            |
 | ----------------------- | ---------- | ---------- | -------------------------------- |
-| `Delegate`              |            | Delegate   | alternative is Signature but I like `Delegate` more |
+| `Delegate`              |            | Delegate   | alternative is `Signature` but I like `Delegate` more |
 | `DelegateHandle`        |            | DelegateHandle           |                                  |
 
 #### Prefix BlueprintImplementableEvent function name with `BP_`
@@ -1292,27 +1292,79 @@ Example:
 * `BP_ActivateTransformTimeline`
 
 #### Differenciate RPCs
-As as for the blueprint event names use `S_` for `Server`, `O` for client (since its replicating to owning client not just any client) and `M_` for Multicast 
+As for the blueprint event names use `S_` for `Server`, `O` for client (since it replicates to owning client not just any client), and `M_` for Multicast 
 
 After the prefix, follow all other rules regarding function naming.
 
 Examples:
 * `S_FireWeapon`
 * `O_NotifyDeath`
-* `SBP_ActivateTransformTimeline`
+* `SBP_ActivateTransformTimeline` (BlueprintImplementableEvent)
 
-### Separate functions from variables
+### Separate methods from variables in class
+I like to organize my code by putting all the methods at the top of the class and the variables at the bottom. This way, functionality and data are clearly separated.
 
-### Immutable first
-use const everywhere 
-use references everywhere 
-if you can that is
+Grouping them by relevance to each other is an alternative, but in my experience, it gets messy and hard to figure out where everything belongs. If you prefer keeping things grouped by relevance, adding clear comment sections can help keep it manageable.
+
+```
+UCLASS(config=Game)
+class AFoShowCharacter : public ACharacter
+{
+	GENERATED_BODY()
+
+public:
+	AFoShowCharacter();
+
+	/* GETTERs */
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
+protected:
+	virtual void BeginPlay() override;
+	
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
+private:
+	/* COMPONENTS */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FollowCamera;
+
+	/* INPUT */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext* DefaultMappingContext;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* JumpAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* MoveAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* LookAction;
+};
+```
+
+### Dont copy use const
+In C++, it’s generally a good practice to use const and references it became sort of a standard. Start with const references for method arguments to make your code safer and more efficient, and only change them if absolutely necessary.
+
+**TLDR**:
+- use const everywhere you can
+- use references everywhere you can
+
 
 ### Comment Section
-use comments to create pseudo sections in your code where it makes sense
+Use comments to create pseudo sections in your code where some relevance exists. 
+
+This is nice to have so it is not 100% necessary.
 
 #### Comment implemented function origin
-When Implementing an interface function use comment While not completely necessary adding this information helps to faster identify used interface
+When Implementing an interface function use comment While not completely necessary adding this information helps to faster identify the used interface
 ```
 /* Start of IGridObjectInterface*/
 virtual UUserWidget* GetWidget_Implementation() override;
