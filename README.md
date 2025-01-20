@@ -1151,7 +1151,7 @@ Bad examples:
 #### 3.3.1.5 Remote Procedure Calls Should Be Prefixed With Target
 
 ~~Any time an RPC is created, it should be prefixed with either `Server`, `Client`, or `Multicast`. No exceptions.~~
-For blueprint even names I prefer using shorter versions `S_` for `Server`, `O` for client (since its replicating to owning client not just any client) and `M_` for Multicast 
+For blueprint even names I prefer using shorter versions `S_` for server, `O` for client (since its replicating to owning client not just any client) and `M_` for Multicast 
 
 After the prefix, follow all other rules regarding function naming.
 
