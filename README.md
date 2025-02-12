@@ -454,6 +454,7 @@ Packing 4 channels of data into a texture (RGBA) is not recommended except for a
 | Camera Anim                | CA_        |            |                                  |
 | Color Curve                | Curve_     | _Color     |                                  |
 | Curve Table                | Curve_     | _Table     |                                  |
+| Curve Atlas		     | CurveAtlas_	|      | 				  |
 | Data Asset                 | DA_{Class name}        |            | Class name should be based on the class it is created from |
 | Data Table                 | DT_        |            |                                  |
 | Float Curve                | Curve_     | _Float     |                                  |
