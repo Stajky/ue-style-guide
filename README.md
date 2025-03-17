@@ -1309,6 +1309,7 @@ Only Signatures Comes to mind, but I will fill this up more in the future:
 | ----------------------- | ---------- | ---------- | -------------------------------- |
 | `Delegate`              |            | Delegate   | alternative is `Signature` but I like `Delegate` more |
 | `DelegateHandle`        |            | DelegateHandle           |                                  |
+| `Widget`	|	| Widget | unreal way of differentiating widgets from rest of the code|
 
 <a name="cpp-naming-blueprintimplementableevent"></a>
 #### 4.2.3 Prefix BlueprintImplementableEvent function name with `BP_`
