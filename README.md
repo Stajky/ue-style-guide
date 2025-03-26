@@ -534,6 +534,7 @@ Packing 4 channels of data into a texture (RGBA) is not recommended except for a
 | Particle System         | PS_        |            |                                  |
 | Material (Post Process) | PP_        |            |                                  |
 | Niagara System	  | NS_	       |	    |				       |
+| Niagara Module	  | NM_	       |	    | 				       |
 
 **[⬆ Back to Top](#table-of-contents)**
 
