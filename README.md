@@ -361,7 +361,7 @@ When naming an asset, use these tables to determine the prefix and suffix to use
 | Level Sequence          | LS_        |            |                                  |
 | Morph Target            | MT_        |            |                                  |
 | Paper Flipbook          | PFB_       |            |                                  |
-| Rig                     | Rig_       |            |                                  |
+| Control Rig             | Rig_       |            |                                  |
 | Skeletal Mesh           | SK_        |            |                                  |
 | Skeleton                | SKEL_      |            |                                  |
 | Pose Asset		  | Pose_      |   	    | 				       |
